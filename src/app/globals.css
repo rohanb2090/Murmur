@@ -1,0 +1,173 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/* ── Tokens ────────────────────────────────────────────────────────────────
+   Ink-indigo ledger, marigold for the one thing to press (and things that
+   need you), rupee-green for money coming to you, rose for money you owe. */
+:root {
+  --bg: #f2f3f9;
+  --surface: #ffffff;
+  --sunk: #e7e9f3;
+  --line: rgba(21, 23, 58, 0.09);
+  --text: #15173a;
+  --muted: #5d6088;
+  --faint: #8d90b0;
+  --accent: #f2a72e;
+  --accent-strong: #9c5c00;
+  --on-accent: #241500;
+  --owed: #0f7f57;
+  --owe: #cc2f48;
+  --glass: rgba(255, 255, 255, 0.72);
+  --shadow: 0 18px 40px -18px rgba(21, 23, 58, 0.35);
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --bg: #15183a;
+  --surface: #1d2148;
+  --sunk: #10122d;
+  --line: rgba(236, 234, 255, 0.09);
+  --text: #f1efff;
+  --muted: #a6a8cc;
+  --faint: #7377a3;
+  --accent: #f5b544;
+  --accent-strong: #f5b544;
+  --on-accent: #241500;
+  --owed: #52d6a0;
+  --owe: #ff8193;
+  --glass: rgba(29, 33, 72, 0.7);
+  --shadow: 0 18px 44px -16px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-sunk: var(--sunk);
+  --color-line: var(--line);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-on-accent: var(--on-accent);
+  --color-owed: var(--owed);
+  --color-owe: var(--owe);
+  --font-display: 'Bricolage Grotesque Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Instrument Sans Variable', ui-sans-serif, system-ui, sans-serif;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+}
+
+.num {
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@layer base {
+  input,
+  textarea,
+  button,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+}
+
+/* Mic: concentric rings breathe outward while listening. */
+@keyframes ripple {
+  from {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  to {
+    transform: scale(2.3);
+    opacity: 0;
+  }
+}
+.ripple-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  border: 2px solid var(--accent);
+  animation: ripple 1.8s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+  pointer-events: none;
+}
+.ripple-ring:nth-child(2) {
+  animation-delay: 0.6s;
+}
+.ripple-ring:nth-child(3) {
+  animation-delay: 1.2s;
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(10px) scale(0.98);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+.rise {
+  animation: rise 0.32s cubic-bezier(0.2, 0.9, 0.3, 1.25) both;
+}
+
+@keyframes land {
+  0% {
+    background: color-mix(in srgb, var(--accent) 22%, transparent);
+  }
+  100% {
+    background: transparent;
+  }
+}
+.land {
+  animation: land 1.4s ease-out both;
+}
+
+.spring {
+  transition: all 0.38s cubic-bezier(0.2, 0.9, 0.3, 1.15);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ripple-ring,
+  .rise,
+  .land {
+    animation: none;
+  }
+  .spring {
+    transition: none;
+  }
+}
+
+.pb-dock {
+  padding-bottom: calc(150px + env(safe-area-inset-bottom));
+}
+.bottom-safe {
+  bottom: calc(14px + env(safe-area-inset-bottom));
+}
